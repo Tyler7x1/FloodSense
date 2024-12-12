@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IoT Data Dashboard</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- FontAwesome for icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+
+  <!-- Custom Styles -->
+  <style>
+    body {
+      background-color: #121212;
+      color: #e0e0e0;
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 3.5em;
+      font-weight: 700;
+      color: #ffffff;
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .gauge-container {
+      text-align: center;
+      margin: 30px;
+    }
+
+    .gauge {
+      width: 300px;
+      height: 300px;
+      margin: 20px auto;
+      border-radius: 50%;
+      background-color: #1f1f1f;
+    }
+
+    .gauge-label {
+      font-size: 1.4em;
+      font-weight: 500;
+      color: #b0b0b0;
+      margin-top: 15px;
+    }
+
+    .card {
+      background-color: #1c1c1c;
+      border-radius: 12px;
+      box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+      margin-bottom: 40px;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+    }
+
+    .card-header {
+      background-color: #007bff;
+      color: #fff;
+      font-size: 1.25em;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .card-body {
+      padding: 40px;
+      text-align: center;
+      color: #fff;
+    }
+
+    .card-footer {
+      background-color: #1a1a1a;
+      color: #b0b0b0;
+      padding: 15px;
+      text-align: center;
+      font-size: 0.9em;
+    }
+
+    .flood-status {
+      font-size: 2.5em;
+      font-weight: 700;
+      color: #28a745;
+      transition: color 0.3s ease;
+    }
+
+    .flood-status.alert-danger {
+      color: #d9534f;
+    }
+
+    /* Button styling */
+    .btn-warning {
+      background-color: #ffc107;
+      color: white;
+      font-size: 1.2em;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 50px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-warning:hover {
+      background-color: #e0a800;
+      transform: scale(1.05);
+    }
+
+    /* Animation for the gauge update */
+    @keyframes gaugeUpdate {
+      0% {
+        transform: scale(0.98);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .gauge-updating {
+      animation: gaugeUpdate 1s ease-out;
+    }
+
+    /* Responsive design */
+    @media (max-width: 767px) {
+      h1 {
+        font-size: 2.8em;
+      }
+
+      .gauge-container {
+        margin: 20px;
+      }
+
+      .gauge {
+        width: 220px;
+        height: 220px;
+      }
+
+      .card-body {
+        padding: 25px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Real-Time IoT Data Monitoring</h1>
+
+    <!-- Temperature and Distance Gauges Section -->
+    <div class="row text-center">
+      <!-- Temperature Gauge -->
+      <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class="gauge-container">
+          <div id="temp-gauge" class="gauge"></div>
+          <p class="gauge-label"><i class="fas fa-thermometer-half"></i> Temperature (°C)</p>
+        </div>
+      </div>
+
+      <!-- Distance Gauge -->
+      <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class="gauge-container">
+          <div id="dist-gauge" class="gauge"></div>
+          <p class="gauge-label"><i class="fas fa-ruler-horizontal"></i> Distance (cm)</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flood Warning Section -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <i class="fas fa-tint"></i> Flood Monitoring Status
+          </div>
+          <div class="card-body">
+            <h3 class="flood-warning">Flood Warning Status:</h3>
+            <p id="flood-status" class="flood-status">No</p>
+          </div>
+          <div class="card-footer">
+            <small class="text-muted">Live updates from ESP32 Dev Module</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"></script>
+
+  <!-- Socket.io client script -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io(); // Connect to the Socket.io server
+
+    // Create the temperature and distance gauges using Gauge.js
+    const tempGauge = new Gauge(document.getElementById('temp-gauge')).setOptions({
+      angle: 0.15,
+      lineWidth: 0.2,
+      radiusScale: 1,
+      pointer: {
+        length: 0.7,
+        strokeWidth: 0.035,
+        color: '#ffffff'
+      },
+      limitMax: true,
+      limitMin: true,
+      colorStart: '#6FADCF',
+      colorStop: '#8FC0DA',
+      strokeColor: '#E0E0E0',
+      generateGradient: true
+    });
+    tempGauge.maxValue = 70; // Max temperature (°C)
+    tempGauge.setMinValue(0); // Min temperature (°C)
+    tempGauge.set(0); // Initial value
+
+    const distGauge = new Gauge(document.getElementById('dist-gauge')).setOptions({
+      angle: 0.15,
+      lineWidth: 0.2,
+      radiusScale: 1,
+      pointer: {
+        length: 0.7,
+        strokeWidth: 0.035,
+        color: '#ffffff'
+      },
+      limitMax: true,
+      limitMin: true,
+      colorStart: '#FF6347',
+      colorStop: '#FF4500',
+      strokeColor: '#E0E0E0',
+      generateGradient: true
+    });
+    distGauge.maxValue = 100; // Max distance (cm)
+    distGauge.setMinValue(0); // Min distance (cm)
+    distGauge.set(0); // Initial value
+
+    // Listen for new data from the server and update gauges
+    socket.on('newData', (data) => {
+      const temperature = data.temperature;
+      const distance = data.distance;
+      const floodWarning = data.floodWarning;
+
+      // Apply animation to the gauges for a smooth transition
+      document.getElementById('temp-gauge').classList.add('gauge-updating');
+      document.getElementById('dist-gauge').classList.add('gauge-updating');
+
+      // Update the temperature gauge
+      tempGauge.set(temperature);
+
+      // Update the distance gauge
+      distGauge.set(distance);
+
+      // Update flood warning status
+      const floodStatusElement = document.getElementById('flood-status');
+      floodStatusElement.textContent = floodWarning ? 'Yes' : 'No';
+      
+      // Toggle flood warning status class
+      floodStatusElement.classList.toggle('alert-danger', floodWarning);
+      floodStatusElement.classList.toggle('alert-success', !floodWarning);
+    });
+  </script>
+</body>
+
+</html>
