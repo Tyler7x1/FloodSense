@@ -1,15 +1,13 @@
-#include <Wire.h>
-#include <LiquidCrystal_I2C.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
 
 // Twilio credentials
-const char* twilioSID = "your_account_sid"; // Replace with your Twilio SID
-const char* twilioAuthToken = "your_auth_token"; // Replace with your Twilio Auth Token
-const char* twilioPhoneNumber = "+1234567890"; // Replace with your Twilio phone number
-const char* alertRecipient = "+0987654321"; // Replace with the recipient phone number
+const char* twilioSID = "SID";
+const char* twilioAuthToken = "AuthToken";
+const char* twilioPhoneNumber = "Number";
+const char* alertRecipient = "Number";
 
-// Ultrasonic and LM35 pin definitions
+// Pin Definitions
 #define TRIG_PIN 18
 #define ECHO_PIN 19
 #define TEMP_PIN 34
@@ -18,14 +16,12 @@ const char* alertRecipient = "+0987654321"; // Replace with the recipient phone 
 #define GREEN_LED 27
 #define BUZZER_PIN 32
 
-LiquidCrystal_I2C lcd(0x27, 16, 2);
-
 // Wi-Fi credentials
-const char* ssid = "SSID";           // Replace with your Wi-Fi SSID
-const char* password = "password";   // Replace with your Wi-Fi Password
+const char* ssid = "SSID";
+const char* password = "Password";
 
 // Backend Server URL
-const char* serverURL = "http://<your_server_ip>/data"; // Replace <your_server_ip> with your server IP or domain
+const char* serverURL = "http://<server_url>:3001/data";
 
 // Variables
 long distance;
@@ -33,9 +29,9 @@ float temperature;
 bool floodWarning = false;
 bool alertSent = false; // Prevent multiple alerts for the same event
 
-// Logging interval (30 seconds)
+// Logging interval (15 seconds)
 unsigned long lastDataSend = 0;
-unsigned long dataSendInterval = 30000; // 30 seconds
+unsigned long dataSendInterval = 15000;
 
 void setup() {
   // Initialize GPIO pins
@@ -46,35 +42,23 @@ void setup() {
   pinMode(GREEN_LED, OUTPUT);
   pinMode(BUZZER_PIN, OUTPUT);
 
-  // Initialize LCD
-  lcd.begin(16, 2);
-  lcd.backlight();
-  lcd.setCursor(0, 0);
-  lcd.print("Flood Monitor");
-  lcd.setCursor(0, 1);
-  lcd.print("Initializing...");
-  delay(2000);
+  // Start Serial Monitor
+  Serial.begin(9600);
 
   // Connect to Wi-Fi
-  Serial.begin(115200);
   WiFi.begin(ssid, password);
-  
   int attemptCount = 0;
   while (WiFi.status() != WL_CONNECTED && attemptCount < 5) {
     delay(1000);
-    lcd.setCursor(0, 1);
-    lcd.print("WiFi Connecting...");
+    Serial.println("WiFi Connecting...");
     attemptCount++;
   }
-  
+
   if (WiFi.status() == WL_CONNECTED) {
-    lcd.setCursor(0, 1);
-    lcd.print("WiFi Connected!");
-    Serial.println("WiFi Connected!");
+    Serial.print("IP address: ");
+    Serial.println(WiFi.localIP());
   } else {
-    lcd.setCursor(0, 1);
-    lcd.print("WiFi Failed...");
-    Serial.println("WiFi Failed!");
+    Serial.println("WiFi Connection Failed!");
   }
 }
 
@@ -92,16 +76,12 @@ void loop() {
     lastDataSend = millis();
   }
 
-  // Display data on LCD
-  lcd.setCursor(0, 0);
-  lcd.print("Temp: ");
-  lcd.print(temperature);
-  lcd.print(" C   ");
-
-  lcd.setCursor(0, 1);
-  lcd.print("Dist: ");
-  lcd.print(distance);
-  lcd.print(" cm   ");
+  // Print data to Serial Monitor
+  Serial.print("Temperature: ");
+  Serial.print(temperature);
+  Serial.print(" C, Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
 
   delay(1000); // Delay for 1 second
 }
@@ -119,7 +99,7 @@ long measureDistance() {
 
 float measureTemperature() {
   int rawValue = analogRead(TEMP_PIN);
-  return (rawValue * (3.3 / 4095.0)) * 100; // Assuming LM35 with 3.3V reference
+  return ((rawValue/8192.0) * 100); // Assuming LM35 with 3.3V reference
 }
 
 void updateIndicators() {
@@ -142,27 +122,9 @@ void updateIndicators() {
     digitalWrite(ORANGE_LED, LOW);
     digitalWrite(RED_LED, HIGH);
     digitalWrite(BUZZER_PIN, HIGH);
-    blinkFloodWarning();
     if (!alertSent) {
       sendFloodAlert();
       alertSent = true; // Prevent multiple alerts
-    }
-  }
-}
-
-void blinkFloodWarning() {
-  static unsigned long lastBlinkTime = 0;
-  static bool warningState = false;
-
-  if (millis() - lastBlinkTime > 1000) {
-    lastBlinkTime = millis();
-    warningState = !warningState;
-
-    lcd.setCursor(0, 1);
-    if (warningState) {
-      lcd.print("Flood Warning!!!");
-    } else {
-      lcd.print("                "); // Clear message
     }
   }
 }
