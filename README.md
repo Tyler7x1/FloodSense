@@ -6,6 +6,7 @@ Real-Time Flood Monitoring System Web App
 
 * [Overview](#overview)
 * [Key Features](#key-features)
+* [Screenshots](#screenshots)
 * [Hardware Requirements](#hardware-requirements)
 * [Technical Requirements](#technical-requirements)
 * [Installation and Setup](#installation-and-setup)
@@ -25,6 +26,12 @@ FloodSense is a Real-Time Flood Monitoring System Web App designed to provide co
 * Real-Time Monitoring: Collects live data from IoT sensors to monitor water levels and temperature.
 * Custom Alerts: Users can configure personalized alerts to stay informed about specific flood conditions.
 * Data Visualization: Provides interactive dashboards and geospatial maps for a comprehensive view of flood data.
+
+## Screenshots
+
+![IOT Dashboard](./Screenshots/IOT%20Dashboard.png)
+![Serial Monitor](./Screenshots/Serial%20Monitor.png)
+![MongoDB](./Screenshots/MongoDB.png)
 
 ## Hardware Requirements
 
