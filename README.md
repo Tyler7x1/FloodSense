@@ -29,8 +29,8 @@ FloodSense is a Real-Time Flood Monitoring System Web App designed to provide co
 
 ## Screenshots
 
-![IOT Dashboard](./Screenshots/IOT%20Dashboard.png)
-![Serial Monitor](./Screenshots/Serial%20Monitor.png)
+![IOT Dashboard](./Screenshots/IOTDashboard.png)
+![Serial Monitor](./Screenshots/SerialMonitor.png)
 ![MongoDB](./Screenshots/MongoDB.png)
 
 ## Hardware Requirements
