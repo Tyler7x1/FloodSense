@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FloodSense</title>
 
-  <!-- Bootstrap CSS -->
+  <!-- Bootstrap CSS for responsive layout and styling -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- FontAwesome for icons -->
@@ -19,8 +19,8 @@
       flex-direction: column;
       min-height: 100vh;
       margin: 0;
-      background-color: #121212;
-      color: #e0e0e0;
+      background-color: #121212; /* Dark background */
+      color: #e0e0e0; /* Light text */
       font-family: 'Roboto', sans-serif;
     }
 
@@ -39,6 +39,7 @@
       margin-bottom: 50px;
     }
 
+    /* Data Section Styling */
     .data-section {
       text-align: center;
       margin: 30px 0;
@@ -56,6 +57,7 @@
       font-weight: 700;
     }
 
+    /* Temperature and Distance color classes */
     .data-value.temp-blue {
       color: #007bff;
     }
@@ -80,6 +82,7 @@
       color: #28a745;
     }
 
+    /* Card Styles for sections */
     .card {
       background-color: #1c1c1c;
       border-radius: 12px;
@@ -109,6 +112,7 @@
       font-size: 0.9em;
     }
 
+    /* Flood Warning Container Styles */
     .flood-warning-container {
       display: flex;
       align-items: center;
@@ -143,6 +147,7 @@
       margin-right: 15px;
     }
 
+    /* Footer Styling */
     footer {
       text-align: center;
       background-color: #121212;
@@ -186,16 +191,19 @@
 
 <body>
   <div class="container">
+    <!-- Header Section -->
     <h1>Real-Time IoT Data Monitoring</h1>
 
     <!-- Temperature and Distance Data Section -->
     <div class="row text-center">
       <div class="col-lg-6 col-md-6 col-sm-12 data-section">
+        <!-- Temperature Display -->
         <p class="data-label"><i class="fas fa-thermometer-half"></i> Temperature (°C)</p>
         <p id="temperature" class="data-value">0</p>
       </div>
 
       <div class="col-lg-6 col-md-6 col-sm-12 data-section">
+        <!-- Distance Display -->
         <p class="data-label"><i class="fas fa-ruler-horizontal"></i> Distance (cm)</p>
         <p id="distance" class="data-value">0</p>
       </div>
@@ -205,6 +213,7 @@
     <div class="row">
       <div class="col-12">
         <div id="flood-warning" class="flood-warning-container">
+          <!-- Flood Warning Icon and Status Text -->
           <i id="flood-icon" class="fas fa-check-circle"></i>
           <span id="flood-status">No Flood Risk</span>
         </div>
@@ -212,10 +221,12 @@
     </div>
   </div>
 
+  <!-- Footer Section -->
   <footer>
     <div class="container">
       <div class="contact-me mt-2">
         <p>Contact Me:</p>
+        <!-- Social Media Links -->
         <a href="https://linkedin.com/in/jayprakash-malik/" target="_blank"><i class="fab fa-linkedin" aria-hidden="true" style="font-size: 1.5em; margin-right: 10px;"></i></a>
         <a href="https://github.com/Tyler7x1/" target="_blank"><i class="fab fa-github" aria-hidden="true" style="font-size: 1.5em; margin-right: 10px;"></i></a>
         <a href="mailto:jpm022504@gmail.com"><i class="fas fa-envelope" aria-hidden="true" style="font-size: 1.5em;"></i></a>
@@ -228,13 +239,14 @@
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"></script>
 
-  <!-- Socket.io client script -->
+  <!-- Socket.io client script for real-time data updates -->
   <script src="/socket.io/socket.io.js"></script>
 
-  <!-- Custom JavaScript for updating the data -->
+  <!-- Custom JavaScript to update data dynamically -->
   <script>
     const socket = io();
 
+    // Listen for new data from the server
     socket.on('newData', (data) => {
       const temperature = data.temperature;
       const distance = data.distance;
@@ -252,6 +264,7 @@
       const floodStatusElement = document.getElementById('flood-status');
       const floodIcon = document.getElementById('flood-icon');
 
+      // Update the flood warning section based on flood risk
       if (floodWarning) {
         floodStatusElement.textContent = "Flood Risk Detected!";
         floodWarningContainer.classList.add('alert-danger');
