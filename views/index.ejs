@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IoT Data Dashboard</title>
+  <title>FloodSense</title>
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -15,14 +15,17 @@
   <!-- Custom Styles -->
   <style>
     body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
       background-color: #121212;
       color: #e0e0e0;
       font-family: 'Roboto', sans-serif;
-      margin: 0;
-      padding: 0;
     }
 
     .container {
+      flex: 1; /* Pushes the footer to the bottom if content is small */
       max-width: 1200px;
       margin: 0 auto;
       padding: 40px;
@@ -106,7 +109,6 @@
       font-size: 0.9em;
     }
 
-    /* Polished flood warning */
     .flood-warning-container {
       display: flex;
       align-items: center;
@@ -119,10 +121,10 @@
       font-size: 1.2em;
       font-weight: 600;
       transition: all 0.3s ease;
-      max-width: 500px; /* Limit the width of the container */
-      margin: 0 auto; /* Center horizontally */
-      height: 80px; /* Make the panel container shorter */
-      overflow: hidden; /* Ensure content doesn't overflow */
+      max-width: 500px;
+      margin: 0 auto;
+      height: 80px;
+      overflow: hidden;
     }
 
     .flood-warning-container.alert-danger {
@@ -141,7 +143,31 @@
       margin-right: 15px;
     }
 
-    /* Responsive design */
+    footer {
+      text-align: center;
+      background-color: #121212;
+      color: #b0b0b0;
+      padding: 15px 0;
+      font-size: 0.9em;
+      margin-top: auto;
+    }
+
+    .contact-me p {
+      margin: 5px 0;
+      font-size: 1.1em;
+      font-weight: bold;
+    }
+
+    .contact-me a {
+      color: #b0b0b0;
+      margin: 0 10px;
+      transition: color 0.3s;
+    }
+
+    .contact-me a:hover {
+      color: #007bff;
+    }
+
     @media (max-width: 767px) {
       h1 {
         font-size: 2.8em;
@@ -164,13 +190,11 @@
 
     <!-- Temperature and Distance Data Section -->
     <div class="row text-center">
-      <!-- Temperature Data -->
       <div class="col-lg-6 col-md-6 col-sm-12 data-section">
         <p class="data-label"><i class="fas fa-thermometer-half"></i> Temperature (°C)</p>
         <p id="temperature" class="data-value">0</p>
       </div>
 
-      <!-- Distance Data -->
       <div class="col-lg-6 col-md-6 col-sm-12 data-section">
         <p class="data-label"><i class="fas fa-ruler-horizontal"></i> Distance (cm)</p>
         <p id="distance" class="data-value">0</p>
@@ -188,6 +212,18 @@
     </div>
   </div>
 
+  <footer>
+    <div class="container">
+      <div class="contact-me mt-2">
+        <p>Contact Me:</p>
+        <a href="https://linkedin.com/in/jayprakash-malik/" target="_blank"><i class="fab fa-linkedin" aria-hidden="true" style="font-size: 1.5em; margin-right: 10px;"></i></a>
+        <a href="https://github.com/Tyler7x1/" target="_blank"><i class="fab fa-github" aria-hidden="true" style="font-size: 1.5em; margin-right: 10px;"></i></a>
+        <a href="mailto:jpm022504@gmail.com"><i class="fas fa-envelope" aria-hidden="true" style="font-size: 1.5em;"></i></a>
+      </div>
+    </div>
+    <p>Created by <a href="https://github.com/Tyler7x1" target="_blank"><strong>Jayprakash Malik</strong></a></p>
+  </footer>
+
   <!-- Bootstrap JS and dependencies -->
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"></script>
@@ -199,39 +235,19 @@
   <script>
     const socket = io();
 
-    // Listen for new data from the server and update the values
     socket.on('newData', (data) => {
       const temperature = data.temperature;
       const distance = data.distance;
       const floodWarning = data.floodWarning;
 
-      // Update temperature value and color
       const temperatureElement = document.getElementById('temperature');
-      if (temperature < 20) {
-        temperatureElement.textContent = temperature;
-        temperatureElement.className = 'data-value temp-blue';
-      } else if (temperature >= 20 && temperature <= 37) {
-        temperatureElement.textContent = temperature;
-        temperatureElement.className = 'data-value temp-green';
-      } else {
-        temperatureElement.textContent = temperature;
-        temperatureElement.className = 'data-value temp-red';
-      }
+      temperatureElement.textContent = temperature;
+      temperatureElement.className = temperature < 20 ? 'data-value temp-blue' : (temperature <= 37 ? 'data-value temp-green' : 'data-value temp-red');
 
-      // Update distance value and color
       const distanceElement = document.getElementById('distance');
-      if (distance < 30) {
-        distanceElement.textContent = distance;
-        distanceElement.className = 'data-value dist-red';
-      } else if (distance >= 30 && distance <= 50) {
-        distanceElement.textContent = distance;
-        distanceElement.className = 'data-value dist-yellow';
-      } else {
-        distanceElement.textContent = distance;
-        distanceElement.className = 'data-value dist-green';
-      }
+      distanceElement.textContent = distance;
+      distanceElement.className = distance < 30 ? 'data-value dist-red' : (distance <= 50 ? 'data-value dist-yellow' : 'data-value dist-green');
 
-      // Update flood warning status
       const floodWarningContainer = document.getElementById('flood-warning');
       const floodStatusElement = document.getElementById('flood-status');
       const floodIcon = document.getElementById('flood-icon');
@@ -240,14 +256,12 @@
         floodStatusElement.textContent = "Flood Risk Detected!";
         floodWarningContainer.classList.add('alert-danger');
         floodWarningContainer.classList.remove('alert-success');
-        floodIcon.classList.remove('fa-check-circle');
-        floodIcon.classList.add('fa-exclamation-circle');
+        floodIcon.classList.replace('fa-check-circle', 'fa-exclamation-circle');
       } else {
         floodStatusElement.textContent = "No Flood Risk";
         floodWarningContainer.classList.add('alert-success');
         floodWarningContainer.classList.remove('alert-danger');
-        floodIcon.classList.remove('fa-exclamation-circle');
-        floodIcon.classList.add('fa-check-circle');
+        floodIcon.classList.replace('fa-exclamation-circle', 'fa-check-circle');
       }
     });
   </script>
