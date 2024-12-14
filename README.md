@@ -51,29 +51,30 @@ FloodSense is a Real-Time Flood Monitoring System Web App designed to provide co
 * Backend: Node.js, Express.js
 * Database: MongoDB
 * Real-Time Communication: Socket.io
+* IDE: Arduino IDE
 
 ## Installation and Setup
 
 ### ESP32 Dev Module Connections
 
-  * Ultrasonic Sensor (HC-SR04)
-        TRIG_PIN (18) → Connect the TRIG pin of the ultrasonic sensor to GPIO18 on the ESP32.
-        ECHO_PIN (19) → Connect the ECHO pin of the ultrasonic sensor to GPIO19 on the ESP32.
-        VCC → Connect the VCC pin of the ultrasonic sensor to the 5V pin of the ESP32 (note: some ESP32 boards can handle 5V input).
-        GND → Connect the GND pin of the ultrasonic sensor to a GND pin on the ESP32.
+#### Ultrasonic Sensor (HC-SR04)
+* TRIG_PIN (18) → Connect the TRIG pin of the ultrasonic sensor to GPIO18 on the ESP32.
+* ECHO_PIN (19) → Connect the ECHO pin of the ultrasonic sensor to GPIO19 on the ESP32.
+* VCC → Connect the VCC pin of the ultrasonic sensor to the 5V pin of the ESP32 (note: some ESP32 boards can handle 5V input).
+* GND → Connect the GND pin of the ultrasonic sensor to a GND pin on the ESP32.
 
-  * LM35 Temperature Sensor
-        TEMP_PIN (34) → Connect the Vout pin of the LM35 sensor to GPIO34 (an ADC pin on the ESP32). This pin reads the analog temperature data.
-        VCC → Connect the VCC pin of the LM35 to the 3.3V pin of the ESP32.
-        GND → Connect the GND pin of the LM35 to the GND pin of the ESP32.
+  #### LM35 Temperature Sensor
+* TEMP_PIN (34) → Connect the Vout pin of the LM35 sensor to GPIO34 (an ADC pin on the ESP32). This pin reads the analog temperature data.
+* VCC → Connect the VCC pin of the LM35 to the 3.3V pin of the ESP32.
+* GND → Connect the GND pin of the LM35 to the GND pin of the ESP32.
 
-  * LEDs (RED, ORANGE, GREEN)
-        RED_LED (25) → Connect the long leg (anode) of the RED LED to GPIO25 on the ESP32, and the short leg (cathode) to a current-limiting resistor (typically 220Ω) and then to GND.
-        ORANGE_LED (26) → Connect the long leg (anode) of the ORANGE LED to GPIO26, and the short leg (cathode) to a 220Ω resistor and then to GND.
-        GREEN_LED (27) → Connect the long leg (anode) of the GREEN LED to GPIO27, and the short leg (cathode) to a 220Ω resistor and then to GND.
+  #### LEDs (RED, ORANGE, GREEN)
+* RED_LED (25) → Connect the long leg (anode) of the RED LED to GPIO25 on the ESP32, and the short leg (cathode) to a current-limiting resistor (typically 220Ω) and then to GND.
+* ORANGE_LED (26) → Connect the long leg (anode) of the ORANGE LED to GPIO26, and the short leg (cathode) to a 220Ω resistor and then to GND.
+* GREEN_LED (27) → Connect the long leg (anode) of the GREEN LED to GPIO27, and the short leg (cathode) to a 220Ω resistor and then to GND.
 
-  * Buzzer
-        BUZZER_PIN (32) → Connect the long leg (anode) of the buzzer to GPIO32 on the ESP32, and the short leg (cathode) to GND.
+  #### Buzzer
+* BUZZER_PIN (32) → Connect the long leg (anode) of the buzzer to GPIO32 on the ESP32, and the short leg (cathode) to GND.
 
 ### Prerequisites
 
