@@ -15,6 +15,7 @@ Real-Time Flood Monitoring System Web App
 * [API Documentation](#api-documentation)
 * [Socket.io Events](#socketio-events)
 * [Contributing](#contributing)
+* [Acknowledgements](#acknowledments)
 * [License](#license)
 
 ## Overview
@@ -235,9 +236,10 @@ git push origin feature/your-feature-name
 ```
 5. Open a Pull Request via GitHub.
 
-## Acknowledgemnts
+## Acknowledgements
 
-I would like to extend my gratitude to my friends, especially Soumyajit Das and Piyush Kumar, for providing the initial idea, inspiration helping me out in accomplishing this project. Their input and encouragement played a significant role in shaping the concept and direction of FloodSense.
+I would like to extend my gratitude to my friends, especially [Soumyajit Das](https://github.com/Soumyajit613) and [Piyush Kumar](https://github.com/piiyyuush), for providing the initial idea, inspiration, and helping me out in accomplishing this project. Their input and encouragement played a significant role in shaping the concept and direction of FloodSense.
+
 
 ## License
 
