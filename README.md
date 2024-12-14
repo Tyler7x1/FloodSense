@@ -235,6 +235,10 @@ git push origin feature/your-feature-name
 ```
 5. Open a Pull Request via GitHub.
 
+## Acknowledgemnts
+
+I would like to extend my gratitude to my friends, especially Soumyajit Das and Piyush Kumar, for providing the initial idea, inspiration helping me out in accomplishing this project. Their input and encouragement played a significant role in shaping the concept and direction of FloodSense.
+
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for more details.
