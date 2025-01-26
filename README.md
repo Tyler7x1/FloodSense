@@ -1,6 +1,10 @@
-# FloodSense
+<p align="center">
+  <img src="./images/FloodSense.png" title="FloodSense">
+</p>
 
-Real-Time Flood Monitoring System Web App
+<hr>
+
+A Real-Time Flood Monitoring System Web App
 
 ## Table of Contents
 
@@ -31,11 +35,11 @@ FloodSense is a Real-Time Flood Monitoring System Web App designed to provide co
 ## Screenshots
 
 ## IOT Dashboard
-![IOT Dashboard](./Screenshots/IOTDashboard.png)
+![IOT Dashboard](./images/IOTDashboard.png)
 ## Serial Monitor (Arduino IDE)
-![Serial Monitor](./Screenshots/SerialMonitor.png)
+![Serial Monitor](./images/SerialMonitor.png)
 ## MongoDB collection
-![MongoDB](./Screenshots/MongoDB.png)
+![MongoDB](./images/MongoDB.png)
 
 ## Hardware Requirements
 
